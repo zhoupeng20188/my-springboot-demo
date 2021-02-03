@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.myspringbootdemo.mapper.UserMapper">
+  <sql id="base_column">
+    user_id, user_name, nick_name, sex, address
+  </sql>
+  <insert id="multiInsert">
+    insert into user(
+    <include refid="base_column"></include>
+    )
+    values
+    <foreach collection="users" item="user" separator=",">
+      (#{user.userId}, #{user.userName}, #{user.nickName},#{user.sex},#{user.address})
+    </foreach>
+  </insert>
+
+  <select id="getUserByUserNameAndNickName" resultType="com.example.myspringbootdemo.entity.User">
+    select
+     <include refid="base_column"></include>
+     from  user where user_name = #{param1} and nick_name=#{param2}
+  </select>
+  <select id="getUserById" resultType="com.example.myspringbootdemo.entity.User">
+    select
+    <include refid="base_column"></include>
+     from  user where user_id = #{id}
+  </select>
+  <select id="getUserMapById" resultType="java.util.Map">
+    select * from  user where user_id = #{id}
+  </select>
+  <select id="getUserMapByUserNameAndNickName" resultType="java.util.Map">
+    select * from  user where user_name = #{param1} and nick_name=#{param2}
+  </select>
+  <resultMap id="userDepMap" type="com.example.myspringbootdemo.entity.User">
+    <result column="user_id" property="userId"></result>
+    <result column="user_name" property="userName"></result>
+    <result column="nick_name" property="nickName"></result>
+    <result column="sex" property="sex"></result>
+    <result column="address" property="address"></result>
+
+    <!--方法1：直接用result-->
+    <!--<result column="dep_id" property="dep.depId"></result>-->
+    <!--<result column="dep_name" property="dep.depName"></result>-->
+    <!--方法2：用association-->
+    <association property="dep" javaType="com.example.myspringbootdemo.entity.Department">
+      <result column="dep_id" property="depId"></result>
+      <result column="dep_name" property="depName"></result>
+    </association>
+  </resultMap>
+  <select id="getUserAndDepById" resultMap="userDepMap">
+    select * from user a left join department b
+    on a.dep_id = b.dep_id
+    where a.user_id = #{id}
+  </select>
+
+  <resultMap id="userDepStepMap" type="com.example.myspringbootdemo.entity.User">
+    <result column="user_id" property="userId"></result>
+    <result column="user_name" property="userName"></result>
+    <result column="nick_name" property="nickName"></result>
+    <result column="sex" property="sex"></result>
+    <result column="address" property="address"></result>
+    <!--使用association select 分步查询-->
+    <!--property值为User里的属性名-->
+    <!--column为select的sql中的参数-->
+    <association property="dep" select="com.example.myspringbootdemo.mapper.DepartmentMapper.getDepartmentById"
+    column="dep_id">
+
+    </association>
+  </resultMap>
+  
+  <select id="getUserAndDepByStep" resultMap="userDepStepMap">
+    select * from user where user_id = #{id}
+  </select>
+
+  <select id="getDepsUserByStep" resultType="com.example.myspringbootdemo.entity.User">
+    select * from user where dep_id = #{id}
+  </select>
+  <select id="getUserByCondition" resultType="com.example.myspringbootdemo.entity.User"
+  useCache="true">
+    select
+    <include refid="base_column"></include>
+    from user
+    <where>
+      user_id in
+      <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+      </foreach>
+      <if test="userName != null">
+        and user_name like concat('%',#{userName}, '%')
+      </if>
+      <if test="nickName != null">
+        and nick_name like  concat('%',#{nickName}, '%')
+      </if>
+    </where>
+
+  </select>
+
+  <update id="update">
+    update user set nick_name = 'ttt11' where user_id = #{id}
+  </update>
+
+  <select id="selectTest" resultType="com.example.myspringbootdemo.entity.User">
+    select * from user where user_name like "%${userName}%"
+  </select>
+</mapper>

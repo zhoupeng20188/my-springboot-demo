@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.myspringbootdemo.mapper.DepartmentMapper">
+  <select id="getDepartmentById" resultType="com.example.myspringbootdemo.entity.Department">
+    select * from  department where dep_id = #{id}
+  </select>
+  <resultMap id="getDepsUserMap" type="com.example.myspringbootdemo.entity.Department">
+    <result column="dep_id" property="depId"></result>
+    <result column="dep_name" property="depName"></result>
+    <collection property="user" select="com.example.myspringbootdemo.mapper.UserMapper.getDepsUserByStep" column="dep_id"></collection>
+  </resultMap>
+  <select id="getDepsUser" resultMap="getDepsUserMap">
+    select * from  department where dep_id = #{id}
+  </select>
+
+
+</mapper>
