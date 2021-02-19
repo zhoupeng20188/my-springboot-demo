@@ -1,0 +1,100 @@
+@startuml
+
+activate 采购中心
+采购中心 -> 采购中心: 1.创建采购单
+activate 采购中心
+deactivate 采购中心
+采购中心 -> 采购中心: 2.编辑采购单
+activate 采购中心
+deactivate 采购中心
+采购中心 -> 采购中心: 3.采购单提交审核
+activate 采购中心
+deactivate 采购中心
+采购中心 -> 采购中心: 4.审核采购单
+activate 采购中心
+deactivate 采购中心
+采购中心 -> 供应商: 5.发送采购单
+activate 供应商
+deactivate 供应商
+采购中心 -> 调度中心: 6.同步采购单
+activate 调度中心
+调度中心 -> 调度中心: 7.创建采购入库单
+activate 调度中心
+deactivate 调度中心
+调度中心 -> WMS中心: 8.同步采购入库单
+activate WMS中心
+deactivate WMS中心
+deactivate 调度中心
+activate 供应商
+供应商 -> WMS中心: 9.发送货物
+activate WMS中心
+deactivate 供应商
+WMS中心 -> WMS中心: 10.商品上架
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> WMS中心: 11.编辑采购入库单
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> WMS中心: 12.采购入库单提交审核
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> 采购中心: 13.将采购单状态修改为待入库
+activate 采购中心
+deactivate 采购中心
+WMS中心 -> WMS中心: 14.审核采购入库单
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> WMS中心: 15.将采购入库单状态修改为已入库
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> 采购中心: 16.将采购单状态修改为已入库
+activate 采购中心
+deactivate 采购中心
+WMS中心 -> WMS中心: 17.更新仓库库存
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> 调度中心: 18.更新调度中心库存
+activate 调度中心
+调度中心 -> 库存中心: 19.更新库存中心库存
+activate 库存中心
+deactivate 库存中心
+deactivate 调度中心
+WMS中心 -> 财务中心: 20.同步采购入库单
+activate 财务中心
+财务中心 -> 财务中心: 21.创建采购结算单
+activate 财务中心
+deactivate 财务中心
+财务中心 -> 财务中心: 22.编辑采购结算单
+activate 财务中心
+deactivate 财务中心
+财务中心 -> 财务中心: 23.提交采购结算单审核
+activate 财务中心
+deactivate 财务中心
+财务中心 -> WMS中心: 24.修改采购入库单状态为待结算
+activate WMS中心
+deactivate WMS中心
+WMS中心 -> 采购中心: 25.修改采购单状态为待结算
+activate 采购中心
+deactivate 采购中心
+财务中心 -> 财务中心: 26.审核采购结算单
+activate 财务中心
+deactivate 财务中心
+财务中心 -> 财务中心: 27.修改采购结算单状态为已完成
+activate 财务中心
+deactivate 财务中心
+财务中心 -> WMS中心: 28.修改采购入库单状态为已完成
+activate WMS中心
+deactivate WMS中心
+财务中心 -> 采购中心: 29.修改采购单状态为已完成
+activate 采购中心
+deactivate 采购中心
+财务中心 -> 供应商: 30.打款给供应商
+activate 供应商
+deactivate 供应商
+
+deactivate 财务中心
+deactivate WMS中心
+
+deactivate 采购中心
+
+@enduml
